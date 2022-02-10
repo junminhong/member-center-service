@@ -1,0 +1,630 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a base golang develop member center service",
+        "title": "Member Center Service API",
+        "contact": {
+            "name": "junmin.hong",
+            "url": "https://github.com/junminhong",
+            "email": "junminhong1110@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "127.0.0.1:9200",
+    "basePath": "/api/v1",
+    "paths": {
+        "/auth/email": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "驗證信箱的Token",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Email Token",
+                        "name": "email_token",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "1000": {
+                        "description": "request格式錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1005": {
+                        "description": "信箱不存在",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1013": {
+                        "description": "Email Token已經過期",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1014": {
+                        "description": "信箱驗證成功",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/refresh-atomic-token": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "重新取得Atomic Token",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003c請在這邊輸入Refresh Atomic Token\u003e",
+                        "description": "Refresh Atomic Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "1000": {
+                        "description": "request格式錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1010": {
+                        "description": "Refresh Atomic Token已經過期",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1011": {
+                        "description": "你沒有權限發起該請求",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1021": {
+                        "description": "已成功重新取得Atomic Token",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/member": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "member"
+                ],
+                "summary": "註冊會員帳號",
+                "parameters": [
+                    {
+                        "description": "請求資料",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requester.Register"
+                        }
+                    }
+                ],
+                "responses": {
+                    "1000": {
+                        "description": "request格式錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1002": {
+                        "description": "信箱已經存在",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1003": {
+                        "description": "帳戶註冊失敗",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1004": {
+                        "description": "帳戶註冊成功",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/member/forget-password": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "member"
+                ],
+                "summary": "忘記密碼",
+                "parameters": [
+                    {
+                        "description": "請求資料",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requester.ForgetPassword"
+                        }
+                    }
+                ],
+                "responses": {
+                    "1000": {
+                        "description": "request格式錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1005": {
+                        "description": "信箱不存在",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1008": {
+                        "description": "已寄送忘記密碼信",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/member/login": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "member"
+                ],
+                "summary": "登入會員帳號",
+                "parameters": [
+                    {
+                        "description": "請求資料",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requester.Login"
+                        }
+                    }
+                ],
+                "responses": {
+                    "1000": {
+                        "description": "request格式錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1005": {
+                        "description": "信箱不存在",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1006": {
+                        "description": "密碼輸入錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1007": {
+                        "description": "登入成功",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1012": {
+                        "description": "該會員信箱未認證",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/member/profile": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "member"
+                ],
+                "summary": "取得會員Profile",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003c請在這邊輸入Atomic Token\u003e",
+                        "description": "Atomic Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "1005": {
+                        "description": "信箱不存在",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1011": {
+                        "description": "你沒有權限發起該請求",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1015": {
+                        "description": "成功取得會員Profile資料",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "member"
+                ],
+                "summary": "編輯會員Profile",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003c請在這邊輸入Atomic Token\u003e",
+                        "description": "Atomic Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "請求資料",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requester.EditProfile"
+                        }
+                    }
+                ],
+                "responses": {
+                    "1000": {
+                        "description": "request格式錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1005": {
+                        "description": "信箱不存在",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1011": {
+                        "description": "你沒有權限發起該請求",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1016": {
+                        "description": "成功編輯會員Profile資料",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/member/resend-email": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "member"
+                ],
+                "summary": "重新發送驗證信",
+                "parameters": [
+                    {
+                        "description": "請求資料",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requester.ResendEmail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "1000": {
+                        "description": "request格式錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1005": {
+                        "description": "信箱不存在",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1008": {
+                        "description": "驗證信已重新發送",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/member/reset-password": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "member"
+                ],
+                "summary": "重置密碼",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003c請在這邊輸入Atomic Token\u003e",
+                        "description": "Atomic Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "請求資料",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requester.ResetPassword"
+                        }
+                    }
+                ],
+                "responses": {
+                    "1000": {
+                        "description": "request格式錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1006": {
+                        "description": "密碼輸入錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1009": {
+                        "description": "重置密碼成功",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1010": {
+                        "description": "Atomic Token已經過期",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1011": {
+                        "description": "你沒有權限發起該請求",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/member/upload-mug-shot": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "member"
+                ],
+                "summary": "上傳大頭照",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003c請在這邊輸入Atomic Token\u003e",
+                        "description": "Atomic Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "大頭照",
+                        "name": "mug_shot",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "1000": {
+                        "description": "request格式錯誤",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1005": {
+                        "description": "信箱不存在",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1011": {
+                        "description": "你沒有權限發起該請求",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1017": {
+                        "description": "上傳檔案超過10MB",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1018": {
+                        "description": "大頭照上傳失敗",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    },
+                    "1020": {
+                        "description": "大頭照上傳成功",
+                        "schema": {
+                            "$ref": "#/definitions/responser.Response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "requester.EditProfile": {
+            "type": "object",
+            "properties": {
+                "nick_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "requester.ForgetPassword": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "requester.Login": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "requester.Register": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "nick_name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "requester.ResendEmail": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "requester.ResetPassword": {
+            "type": "object",
+            "properties": {
+                "new_password": {
+                    "type": "string"
+                },
+                "old_password": {
+                    "type": "string"
+                }
+            }
+        },
+        "responser.Response": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "message": {
+                    "type": "string"
+                },
+                "result_code": {
+                    "type": "integer"
+                },
+                "time_stamp": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

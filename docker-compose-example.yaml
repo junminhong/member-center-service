@@ -1,0 +1,56 @@
+version: "3.7"
+
+services:
+  member-center-service:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - "8080:8080"
+    container_name: member-center-service
+    environment:
+      - APP.DB_HOST=member-center-postgres
+      - APP.DB_DATABASE=member-center-service
+      - APP.DB_USERNAME=username
+      - APP.DB_PASSWORD=password
+    depends_on:
+      - member-center-postgres
+      - member-center-redis
+    entrypoint: go run /app/cmd/main.go
+    restart: always
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  member-center-postgres:
+    image: postgres:12.4-alpine
+    ports:
+      - "5432:5432"
+    container_name: member-center-postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=username
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=member-center-service
+    restart: always
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  member-center-redis:
+    image: redis:6.2.6-alpine
+    ports:
+      - "6379:6379"
+    restart: always
+    container_name: member-center-redis
+    command: redis-server --requirepass password
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"

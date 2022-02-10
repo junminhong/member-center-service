@@ -1,0 +1,20 @@
+APP:
+  DB_HOST: 127.0.0.1
+  DB_DATABASE: member-center-service
+  DB_USERNAME: username
+  DB_PASSWORD: password
+  DB_PORT: 5432
+  REDIS_HOST: 127.0.0.1
+  REDIS_PORT: 6379
+  REDIS_PASSWORD: password
+  GIN_MODE: "release"
+  PORT: 8080
+  HOST: 127.0.0.1
+  AUTH_EMAIL_PATH: "https://member-center-service.domain-name/"
+
+SMTP:
+  EMAIL_ACCOUNT: account
+  EMAIL_PASSWORD: password
+  EMAIL_SECRET: not things
+  EMAIL_HOST: 127.0.0.1
+  EMAIL_PORT: 21

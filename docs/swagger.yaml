@@ -1,0 +1,413 @@
+basePath: /api/v1
+definitions:
+  requester.EditProfile:
+    properties:
+      nick_name:
+        type: string
+    type: object
+  requester.ForgetPassword:
+    properties:
+      email:
+        type: string
+    type: object
+  requester.Login:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  requester.Register:
+    properties:
+      email:
+        type: string
+      nick_name:
+        type: string
+      password:
+        type: string
+    type: object
+  requester.ResendEmail:
+    properties:
+      email:
+        type: string
+    type: object
+  requester.ResetPassword:
+    properties:
+      new_password:
+        type: string
+      old_password:
+        type: string
+    type: object
+  responser.Response:
+    properties:
+      data: {}
+      message:
+        type: string
+      result_code:
+        type: integer
+      time_stamp:
+        type: string
+    type: object
+host: 127.0.0.1:9200
+info:
+  contact:
+    email: junminhong1110@gmail.com
+    name: junmin.hong
+    url: https://github.com/junminhong
+  description: This is a base golang develop member center service
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Member Center Service API
+  version: "1.0"
+paths:
+  /auth/email:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Email Token
+        in: query
+        name: email_token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "1000":
+          description: request格式錯誤
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1005":
+          description: 信箱不存在
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1013":
+          description: Email Token已經過期
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1014":
+          description: 信箱驗證成功
+          schema:
+            $ref: '#/definitions/responser.Response'
+      summary: 驗證信箱的Token
+      tags:
+      - auth
+  /auth/refresh-atomic-token:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - default: Bearer <請在這邊輸入Refresh Atomic Token>
+        description: Refresh Atomic Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "1000":
+          description: request格式錯誤
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1010":
+          description: Refresh Atomic Token已經過期
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1011":
+          description: 你沒有權限發起該請求
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1021":
+          description: 已成功重新取得Atomic Token
+          schema:
+            $ref: '#/definitions/responser.Response'
+      summary: 重新取得Atomic Token
+      tags:
+      - auth
+  /member:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 請求資料
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/requester.Register'
+      produces:
+      - application/json
+      responses:
+        "1000":
+          description: request格式錯誤
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1002":
+          description: 信箱已經存在
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1003":
+          description: 帳戶註冊失敗
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1004":
+          description: 帳戶註冊成功
+          schema:
+            $ref: '#/definitions/responser.Response'
+      summary: 註冊會員帳號
+      tags:
+      - member
+  /member/forget-password:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 請求資料
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/requester.ForgetPassword'
+      produces:
+      - application/json
+      responses:
+        "1000":
+          description: request格式錯誤
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1005":
+          description: 信箱不存在
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1008":
+          description: 已寄送忘記密碼信
+          schema:
+            $ref: '#/definitions/responser.Response'
+      summary: 忘記密碼
+      tags:
+      - member
+  /member/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 請求資料
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/requester.Login'
+      produces:
+      - application/json
+      responses:
+        "1000":
+          description: request格式錯誤
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1005":
+          description: 信箱不存在
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1006":
+          description: 密碼輸入錯誤
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1007":
+          description: 登入成功
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1012":
+          description: 該會員信箱未認證
+          schema:
+            $ref: '#/definitions/responser.Response'
+      summary: 登入會員帳號
+      tags:
+      - member
+  /member/profile:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - default: Bearer <請在這邊輸入Atomic Token>
+        description: Atomic Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "1005":
+          description: 信箱不存在
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1011":
+          description: 你沒有權限發起該請求
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1015":
+          description: 成功取得會員Profile資料
+          schema:
+            $ref: '#/definitions/responser.Response'
+      summary: 取得會員Profile
+      tags:
+      - member
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - default: Bearer <請在這邊輸入Atomic Token>
+        description: Atomic Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 請求資料
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/requester.EditProfile'
+      produces:
+      - application/json
+      responses:
+        "1000":
+          description: request格式錯誤
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1005":
+          description: 信箱不存在
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1011":
+          description: 你沒有權限發起該請求
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1016":
+          description: 成功編輯會員Profile資料
+          schema:
+            $ref: '#/definitions/responser.Response'
+      summary: 編輯會員Profile
+      tags:
+      - member
+  /member/resend-email:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 請求資料
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/requester.ResendEmail'
+      produces:
+      - application/json
+      responses:
+        "1000":
+          description: request格式錯誤
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1005":
+          description: 信箱不存在
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1008":
+          description: 驗證信已重新發送
+          schema:
+            $ref: '#/definitions/responser.Response'
+      summary: 重新發送驗證信
+      tags:
+      - member
+  /member/reset-password:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - default: Bearer <請在這邊輸入Atomic Token>
+        description: Atomic Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 請求資料
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/requester.ResetPassword'
+      produces:
+      - application/json
+      responses:
+        "1000":
+          description: request格式錯誤
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1006":
+          description: 密碼輸入錯誤
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1009":
+          description: 重置密碼成功
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1010":
+          description: Atomic Token已經過期
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1011":
+          description: 你沒有權限發起該請求
+          schema:
+            $ref: '#/definitions/responser.Response'
+      summary: 重置密碼
+      tags:
+      - member
+  /member/upload-mug-shot:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - default: Bearer <請在這邊輸入Atomic Token>
+        description: Atomic Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: 大頭照
+        in: formData
+        name: mug_shot
+        required: true
+        type: file
+      produces:
+      - multipart/form-data
+      responses:
+        "1000":
+          description: request格式錯誤
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1005":
+          description: 信箱不存在
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1011":
+          description: 你沒有權限發起該請求
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1017":
+          description: 上傳檔案超過10MB
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1018":
+          description: 大頭照上傳失敗
+          schema:
+            $ref: '#/definitions/responser.Response'
+        "1020":
+          description: 大頭照上傳成功
+          schema:
+            $ref: '#/definitions/responser.Response'
+      summary: 上傳大頭照
+      tags:
+      - member
+swagger: "2.0"
