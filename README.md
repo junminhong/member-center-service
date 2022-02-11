@@ -9,9 +9,9 @@
 - 全面docker化，並能使用docker-compose進行管理
 
 ## Demo
-[API DOC](https://member-center.jmh-su.com)
+[API DOC](https://member-center.jmh-su.com/swagger/index.html)
 
-[DEMO](https://member.jmh-su.com)
+[Live DEMO](https://member.jmh-su.com)
 
 ## 已完成功能
 - [x] 註冊會員
