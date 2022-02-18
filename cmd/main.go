@@ -126,7 +126,7 @@ func (postgresDB *postgresDB) migrationDB() {
 // @BasePath  /api/v1
 func main() {
 	db := setUpDB()
-	//go db.migrationDB()
+	go db.migrationDB()
 	redis := setUpRedis()
 	router := setUpRouter()
 	grpcServer, lis := setupGRPC()

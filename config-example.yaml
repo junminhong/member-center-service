@@ -9,6 +9,7 @@ APP:
   REDIS_PASSWORD: password
   GIN_MODE: "release"
   PORT: 8080
+  GRPC_PORT: 8081
   HOST: 127.0.0.1
   AUTH_EMAIL_PATH: "https://member-center-service.domain-name/"
 
