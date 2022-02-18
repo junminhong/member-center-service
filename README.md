@@ -7,11 +7,12 @@
 - 基於DDD架構開發
 - 搭配Redis進行快取增加效能
 - 全面docker化，並能使用docker-compose進行管理
+- 提供grpc通訊介面，讓services之間更好溝通
 
 ## Demo
 [API DOC](https://member-center.jmh-su.com/swagger/index.html)
 
-[Live DEMO](https://member.jmh-su.com)
+[DEMO - coming soon](https://member.jmh-su.com)
 
 ## 已完成功能
 - [x] 註冊會員

@@ -4,3 +4,4 @@ docker
 .idea
 *.pem
 file-center.json
+.DS_Store
