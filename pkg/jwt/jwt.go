@@ -47,6 +47,9 @@ func GenerateAtomicToken(timeLimit int) string {
 func VerifyAtomicToken(atomicToken string) bool {
 	pubKey, _ := jwt.ParseRSAPublicKeyFromPEM(getLocalSecretKey("pubkey"))
 	tokenParts := strings.Split(atomicToken, ".")
+	if len(tokenParts) != 3 {
+		return false
+	}
 	err := jwt.SigningMethodRS256.Verify(strings.Join(tokenParts[0:2], "."), tokenParts[2], pubKey)
 	if err != nil {
 		zapLogger.Info(err.Error())
