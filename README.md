@@ -10,7 +10,7 @@
 - 提供grpc通訊介面，讓services之間更好溝通
 
 ## Demo
-[API DOC](https://member-center.jmh-su.com)
+[API DOC](https://member-center.jmh-su.com/swagger/index.html)
 
 [DEMO - coming soon](https://member.jmh-su.com)
 
