@@ -11,6 +11,7 @@ import (
 	"github.com/junminhong/member-center-service/pkg/smtp"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
+	"golang.org/x/crypto/bcrypt"
 	"mime/multipart"
 	"strings"
 	"time"
@@ -37,7 +38,8 @@ func (memberUseCase *memberUseCase) Register(request requester.Register) respons
 	}
 	member.UUID = uuid.NewString()
 	member.Email = request.Email
-	member.Password = request.Password
+	bytes, _ := bcrypt.GenerateFromPassword([]byte(request.Password), 14)
+	member.Password = string(bytes)
 	member.MemberInfo = domain.MemberInfo{NickName: request.NickName}
 	if !memberUseCase.MemberRepo.Register(member) {
 		return responser.Response{
@@ -70,7 +72,7 @@ func (memberUseCase *memberUseCase) Login(request requester.Login) responser.Res
 			TimeStamp:  time.Now(),
 		}
 	}
-	if strings.Compare(member.Password, request.Password) != 0 {
+	if err := bcrypt.CompareHashAndPassword([]byte(member.Password), []byte(request.Password)); err != nil {
 		return responser.Response{
 			ResultCode: responser.PasswordNotMatchErr.Code(),
 			Message:    responser.PasswordNotMatchErr.Message(),
